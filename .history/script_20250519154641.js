@@ -305,13 +305,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Initialize SortableJS
-    const sortable = new Sortable(tasksList, {
-        animation: 150,
-        onEnd: function (evt) {
-            console.log('Task dropped:', evt.item);
-            updateTaskOrder();
-        }
+    // Initialize Dragula
+    const drake = dragula([tasksList]);
+
+    drake.on('drop', (el, target, source, sibling) => {
+        console.log('Task dropped:', el);
+        // TODO: Update task order in Supabase
+        updateTaskOrder();
     });
 
     // Initial check on page load
@@ -324,22 +324,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-async function updateTaskOrder() {
+function updateTaskOrder() {
+    // This function will be implemented later to update the order in Supabase
     console.log('Updating task order in database...');
+    // Get the new order of task IDs from the DOM
     const taskElements = tasksList.querySelectorAll('.task-item');
-    const updates = Array.from(taskElements).map((item, index) => ({
-        id: item.querySelector('.checkbox').dataset.id,
-        order: index
-    }));
+    const newOrder = Array.from(taskElements).map(item => item.querySelector('.checkbox').dataset.id);
+    console.log('New task order:', newOrder);
 
-    const { error } = await supabase
-        .from('tasks')
-        .upsert(updates);
-
-    if (error) {
-        console.error('Error updating task order:', error.message);
-    } else {
-        console.log('Task order updated successfully.');
-        // No need to reload tasks here, as the UI is already updated by SortableJS
-    }
+    // TODO: Call Supabase function to update the order
+    // This requires an 'order' column in the tasks table and a function to handle the update.
 }

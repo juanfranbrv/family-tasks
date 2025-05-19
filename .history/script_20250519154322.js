@@ -81,9 +81,8 @@ async function loadTasks(currentUserEmail) {
 
     const { data, error } = await supabase
         .from('tasks')
-        .select('*, owner_user_id, created_by_user_id, last_modified_by_user_id') // Select all columns including user IDs
-        .order('order', { ascending: true }) // Order by the new 'order' column
-        .order('created_at', { ascending: true }); // Secondary sort by created_at
+        .select('*')
+        .order('created_at', { ascending: true });
 
     if (error) {
         console.error('Error loading tasks:', error.message);
@@ -100,26 +99,6 @@ async function loadTasks(currentUserEmail) {
                 userIds.add(task.last_modified_by_user_id);
             }
         });
-
-        // If tasks are loaded for the first time and have no order, set a default order
-        if (data && data.length > 0 && data.every(task => task.order === null)) {
-            console.log('Setting initial order for tasks...');
-            const updates = data.map((task, index) => ({
-                id: task.id,
-                order: index
-            }));
-            const { error: updateError } = await supabase
-                .from('tasks')
-                .upsert(updates);
-
-            if (updateError) {
-                console.error('Error setting initial order:', updateError.message);
-            } else {
-                // Reload tasks after setting initial order
-                loadTasks(currentUserEmail);
-                return;
-            }
-        }
 
         // Fetch user emails for the extracted IDs
         const { data: usersData, error: usersError } = await supabase
@@ -305,15 +284,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Initialize SortableJS
-    const sortable = new Sortable(tasksList, {
-        animation: 150,
-        onEnd: function (evt) {
-            console.log('Task dropped:', evt.item);
-            updateTaskOrder();
-        }
-    });
-
     // Initial check on page load
     supabase.auth.getSession().then(({ data: { session } }) => {
         if (session) {
@@ -323,23 +293,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
-async function updateTaskOrder() {
-    console.log('Updating task order in database...');
-    const taskElements = tasksList.querySelectorAll('.task-item');
-    const updates = Array.from(taskElements).map((item, index) => ({
-        id: item.querySelector('.checkbox').dataset.id,
-        order: index
-    }));
-
-    const { error } = await supabase
-        .from('tasks')
-        .upsert(updates);
-
-    if (error) {
-        console.error('Error updating task order:', error.message);
-    } else {
-        console.log('Task order updated successfully.');
-        // No need to reload tasks here, as the UI is already updated by SortableJS
-    }
-}

@@ -305,13 +305,61 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Initialize SortableJS
-    const sortable = new Sortable(tasksList, {
-        animation: 150,
-        onEnd: function (evt) {
-            console.log('Task dropped:', evt.item);
-            updateTaskOrder();
+    // Initialize Dragula
+    const drake = dragula([tasksList]);
+
+    // Añadir efectos visuales durante el drag and drop
+    let mirrorMoveHandler = null;
+
+    drake.on('drag', (el) => {
+        el.classList.add('dragging');
+        // Hacer que el .gu-mirror siga el cursor
+        mirrorMoveHandler = function (e) {
+            const mirror = document.querySelector('.gu-mirror');
+            if (mirror && e.clientX && e.clientY) {
+                mirror.style.position = 'fixed';
+                mirror.style.pointerEvents = 'none';
+                mirror.style.left = (e.clientX - mirror.offsetWidth / 2) + 'px';
+                mirror.style.top = (e.clientY - mirror.offsetHeight / 2) + 'px';
+                mirror.style.zIndex = 9999;
+            }
+        };
+        document.addEventListener('mousemove', mirrorMoveHandler);
+    });
+
+    drake.on('dragend', (el) => {
+        el.classList.remove('dragging');
+        // Remover cualquier clase 'drag-over' residual
+        const overEls = tasksList.querySelectorAll('.drag-over');
+        overEls.forEach(e => e.classList.remove('drag-over'));
+        // Limpiar el handler y estilos del mirror
+        document.removeEventListener('mousemove', mirrorMoveHandler);
+        const mirror = document.querySelector('.gu-mirror');
+        if (mirror) {
+            mirror.style.position = '';
+            mirror.style.left = '';
+            mirror.style.top = '';
+            mirror.style.pointerEvents = '';
+            mirror.style.zIndex = '';
         }
+    });
+
+    drake.on('over', (el, container, source) => {
+        if (el) el.classList.add('drag-over');
+    });
+
+    drake.on('out', (el, container, source) => {
+        if (el) el.classList.remove('drag-over');
+    });
+
+    drake.on('drop', (el, target, source, sibling) => {
+        el.classList.remove('dragging');
+        // Remover cualquier clase 'drag-over' residual
+        const overEls = tasksList.querySelectorAll('.drag-over');
+        overEls.forEach(e => e.classList.remove('drag-over'));
+        console.log('Task dropped:', el);
+        // TODO: Update task order in Supabase
+        updateTaskOrder();
     });
 
     // Initial check on page load
@@ -340,6 +388,6 @@ async function updateTaskOrder() {
         console.error('Error updating task order:', error.message);
     } else {
         console.log('Task order updated successfully.');
-        // No need to reload tasks here, as the UI is already updated by SortableJS
+        // No need to reload tasks here, as the UI is already updated by dragula
     }
 }

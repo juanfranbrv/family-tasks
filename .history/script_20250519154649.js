@@ -305,13 +305,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Initialize SortableJS
-    const sortable = new Sortable(tasksList, {
-        animation: 150,
-        onEnd: function (evt) {
-            console.log('Task dropped:', evt.item);
-            updateTaskOrder();
-        }
+    // Initialize Dragula
+    const drake = dragula([tasksList]);
+
+    drake.on('drop', (el, target, source, sibling) => {
+        console.log('Task dropped:', el);
+        // TODO: Update task order in Supabase
+        updateTaskOrder();
     });
 
     // Initial check on page load
@@ -340,6 +340,6 @@ async function updateTaskOrder() {
         console.error('Error updating task order:', error.message);
     } else {
         console.log('Task order updated successfully.');
-        // No need to reload tasks here, as the UI is already updated by SortableJS
+        // No need to reload tasks here, as the UI is already updated by dragula
     }
 }

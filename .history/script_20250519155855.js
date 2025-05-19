@@ -305,13 +305,38 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Initialize SortableJS
-    const sortable = new Sortable(tasksList, {
-        animation: 150,
-        onEnd: function (evt) {
-            console.log('Task dropped:', evt.item);
-            updateTaskOrder();
-        }
+    // Initialize Dragula
+    const drake = dragula([tasksList]);
+
+    // Añadir efectos visuales durante el drag and drop
+
+    drake.on('drag', (el) => {
+        el.classList.add('dragging');
+    });
+
+    drake.on('dragend', (el) => {
+        el.classList.remove('dragging');
+        // Remover cualquier clase 'drag-over' residual
+        const overEls = tasksList.querySelectorAll('.drag-over');
+        overEls.forEach(e => e.classList.remove('drag-over'));
+    });
+
+    drake.on('over', (el, container, source) => {
+        if (el) el.classList.add('drag-over');
+    });
+
+    drake.on('out', (el, container, source) => {
+        if (el) el.classList.remove('drag-over');
+    });
+
+    drake.on('drop', (el, target, source, sibling) => {
+        el.classList.remove('dragging');
+        // Remover cualquier clase 'drag-over' residual
+        const overEls = tasksList.querySelectorAll('.drag-over');
+        overEls.forEach(e => e.classList.remove('drag-over'));
+        console.log('Task dropped:', el);
+        // TODO: Update task order in Supabase
+        updateTaskOrder();
     });
 
     // Initial check on page load
@@ -340,6 +365,6 @@ async function updateTaskOrder() {
         console.error('Error updating task order:', error.message);
     } else {
         console.log('Task order updated successfully.');
-        // No need to reload tasks here, as the UI is already updated by SortableJS
+        // No need to reload tasks here, as the UI is already updated by dragula
     }
 }
