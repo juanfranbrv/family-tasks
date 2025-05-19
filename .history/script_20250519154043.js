@@ -181,12 +181,8 @@ async function addTask() {
 }
 
 async function updateTaskStatus(taskId, isComplete) {
-    const { data: { session } } = await supabase.auth.getSession();
-    const user = session?.user;
-    if (!user) {
-        console.error('User not signed in for status update.');
-        return;
-    }
+     const user = supabase.auth.getUser();
+     if (!user) return;
 
     const { data, error } = await supabase
         .from('tasks')
@@ -205,12 +201,8 @@ async function updateTaskStatus(taskId, isComplete) {
 }
 
 async function updateTaskText(taskId, newText) {
-    const { data: { session } } = await supabase.auth.getSession();
-    const user = session?.user;
-    if (!user) {
-        console.error('User not signed in for text update.');
-        return;
-    }
+     const user = supabase.auth.getUser();
+     if (!user) return;
 
     const { data, error } = await supabase
         .from('tasks')

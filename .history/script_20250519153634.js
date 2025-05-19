@@ -15,9 +15,9 @@ const tasksList = document.getElementById('tasks-list');
 
 // Define a map for user IDs/emails to display names (customize these)
 const userDisplayNameMap = {
-    'juanfranbrv@gmail.com': 'Juanfran',
+    'juanfranbrv@gmail.com': 'Junafran',
     'vicentbriva@gmail.com': 'Vicent',
-    'emiglesi@gmail.com': 'Emi'
+    'emiglesi@gmail.com': 'Usuario 3'
     // Add more mappings as needed
 };
 
@@ -125,8 +125,8 @@ async function loadTasks(currentUserEmail) {
 function displayTasks(tasks, userEmailMap, currentUserEmail) {
     tasksList.innerHTML = ''; // Clear current list
     tasks.forEach(task => {
-        const createdByUserEmail = userEmailMap[task.created_by_user_id] || 'Desconocido';
-        const lastModifiedByUserEmail = userEmailMap[task.last_modified_by_user_id] || 'Desconocido';
+        const createdByUserEmail = task.created_by_user_id === supabase.auth.user?.id ? currentUserEmail : userEmailMap[task.created_by_user_id] || 'Desconocido';
+        const lastModifiedByUserEmail = task.last_modified_by_user_id === supabase.auth.user?.id ? currentUserEmail : userEmailMap[task.last_modified_by_user_id] || 'Desconocido';
 
         const createdByDisplayName = userDisplayNameMap[createdByUserEmail] || createdByUserEmail;
         const lastModifiedByDisplayName = userDisplayNameMap[lastModifiedByUserEmail] || lastModifiedByUserEmail;
@@ -181,12 +181,8 @@ async function addTask() {
 }
 
 async function updateTaskStatus(taskId, isComplete) {
-    const { data: { session } } = await supabase.auth.getSession();
-    const user = session?.user;
-    if (!user) {
-        console.error('User not signed in for status update.');
-        return;
-    }
+     const user = supabase.auth.getUser();
+     if (!user) return;
 
     const { data, error } = await supabase
         .from('tasks')
@@ -205,12 +201,8 @@ async function updateTaskStatus(taskId, isComplete) {
 }
 
 async function updateTaskText(taskId, newText) {
-    const { data: { session } } = await supabase.auth.getSession();
-    const user = session?.user;
-    if (!user) {
-        console.error('User not signed in for text update.');
-        return;
-    }
+     const user = supabase.auth.getUser();
+     if (!user) return;
 
     const { data, error } = await supabase
         .from('tasks')

@@ -15,22 +15,13 @@ const tasksList = document.getElementById('tasks-list');
 
 // Define a map for user IDs/emails to display names (customize these)
 const userDisplayNameMap = {
-    'juanfranbrv@gmail.com': 'Juanfran',
-    'vicentbriva@gmail.com': 'Vicent',
-    'emiglesi@gmail.com': 'Emi'
+    'user1@example.com': 'Usuario 1',
+    'user2@example.com': 'Usuario 2',
+    'user3@example.com': 'Usuario 3'
     // Add more mappings as needed
 };
 
 
-// --- Authentication ---
-
-async function signInWithGoogle() {
-    const redirectUrl = window.location.origin;
-    console.log('Redirecting to:', redirectUrl);
-    const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-            redirectTo: redirectUrl
         }
     });
     if (error) {
@@ -125,12 +116,8 @@ async function loadTasks(currentUserEmail) {
 function displayTasks(tasks, userEmailMap, currentUserEmail) {
     tasksList.innerHTML = ''; // Clear current list
     tasks.forEach(task => {
-        const createdByUserEmail = userEmailMap[task.created_by_user_id] || 'Desconocido';
-        const lastModifiedByUserEmail = userEmailMap[task.last_modified_by_user_id] || 'Desconocido';
-
-        const createdByDisplayName = userDisplayNameMap[createdByUserEmail] || createdByUserEmail;
-        const lastModifiedByDisplayName = userDisplayNameMap[lastModifiedByUserEmail] || lastModifiedByUserEmail;
-
+        const createdByEmail = task.created_by_user_id === supabase.auth.user?.id ? currentUserEmail : userEmailMap[task.created_by_user_id] || 'Desconocido';
+        const lastModifiedByEmail = task.last_modified_by_user_id === supabase.auth.user?.id ? currentUserEmail : userEmailMap[task.last_modified_by_user_id] || 'Desconocido';
 
         const taskElement = document.createElement('div');
         taskElement.classList.add('task-item', 'card', 'bg-base-100', 'shadow-xl', 'mb-4');
@@ -143,8 +130,8 @@ function displayTasks(tasks, userEmailMap, currentUserEmail) {
                     <button class="btn btn-sm btn-ghost text-red-500 delete-task-btn" data-id="${task.id}">Eliminar</button>
                 </div>
                 <div class="text-xs text-gray-500 mt-2">
-                    Creada por: ${createdByDisplayName} el ${new Date(task.created_at).toLocaleString()}
-                    ${task.updated_at !== task.created_at ? `<br>Última modificación por: ${lastModifiedByDisplayName} el ${new Date(task.updated_at).toLocaleString()}` : ''}
+                    Creada por: ${createdByEmail} el ${new Date(task.created_at).toLocaleString()}
+                    ${task.updated_at !== task.created_at ? `<br>Última modificación por: ${lastModifiedByEmail} el ${new Date(task.updated_at).toLocaleString()}` : ''}
                 </div>
             </div>
         `;
@@ -181,12 +168,8 @@ async function addTask() {
 }
 
 async function updateTaskStatus(taskId, isComplete) {
-    const { data: { session } } = await supabase.auth.getSession();
-    const user = session?.user;
-    if (!user) {
-        console.error('User not signed in for status update.');
-        return;
-    }
+     const user = supabase.auth.getUser();
+     if (!user) return;
 
     const { data, error } = await supabase
         .from('tasks')
@@ -205,12 +188,8 @@ async function updateTaskStatus(taskId, isComplete) {
 }
 
 async function updateTaskText(taskId, newText) {
-    const { data: { session } } = await supabase.auth.getSession();
-    const user = session?.user;
-    if (!user) {
-        console.error('User not signed in for text update.');
-        return;
-    }
+     const user = supabase.auth.getUser();
+     if (!user) return;
 
     const { data, error } = await supabase
         .from('tasks')
