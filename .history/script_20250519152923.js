@@ -66,7 +66,7 @@ function handleSignedOutUser() {
 
 // --- Task Management (CRUD) ---
 
-async function loadTasks(currentUserEmail) {
+async function loadTasks() {
     const user = supabase.auth.getUser();
     if (!user) return;
 
@@ -93,7 +93,7 @@ async function loadTasks(currentUserEmail) {
 
         // Fetch user emails for the extracted IDs
         const { data: usersData, error: usersError } = await supabase
-            .from('users') // Reference public.users table
+            .from('auth.users') // Correctly reference auth.users table
             .select('id, email')
             .in('id', Array.from(userIds));
 
@@ -106,18 +106,18 @@ async function loadTasks(currentUserEmail) {
                 map[user.id] = user.email;
                 return map;
             }, {});
-            displayTasks(data, userEmailMap, currentUserEmail); // Display tasks with emails
+            displayTasks(data, userEmailMap); // Display tasks with emails
         }
 
         accessDeniedMsg.classList.add('hidden'); // Hide access denied if tasks loaded
     }
 }
 
-function displayTasks(tasks, userEmailMap, currentUserEmail) {
+function displayTasks(tasks, userEmailMap) {
     tasksList.innerHTML = ''; // Clear current list
     tasks.forEach(task => {
-        const createdByEmail = task.created_by_user_id === supabase.auth.user?.id ? currentUserEmail : userEmailMap[task.created_by_user_id] || 'Desconocido';
-        const lastModifiedByEmail = task.last_modified_by_user_id === supabase.auth.user?.id ? currentUserEmail : userEmailMap[task.last_modified_by_user_id] || 'Desconocido';
+        const createdByEmail = userEmailMap[task.created_by_user_id] || 'Desconocido';
+        const lastModifiedByEmail = userEmailMap[task.last_modified_by_user_id] || 'Desconocido';
 
         const taskElement = document.createElement('div');
         taskElement.classList.add('task-item', 'card', 'bg-base-100', 'shadow-xl', 'mb-4');

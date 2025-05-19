@@ -93,7 +93,7 @@ async function loadTasks(currentUserEmail) {
 
         // Fetch user emails for the extracted IDs
         const { data: usersData, error: usersError } = await supabase
-            .from('users') // Reference public.users table
+            .from('auth.users') // Correctly reference auth.users table
             .select('id, email')
             .in('id', Array.from(userIds));
 
