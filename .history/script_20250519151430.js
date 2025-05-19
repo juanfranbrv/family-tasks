@@ -82,43 +82,14 @@ async function loadTasks() {
              tasksList.innerHTML = ''; // Clear tasks if access denied
         }
     } else {
-        // Extract unique user IDs from tasks
-        const userIds = new Set();
-        data.forEach(task => {
-            userIds.add(task.created_by_user_id);
-            if (task.last_modified_by_user_id) {
-                userIds.add(task.last_modified_by_user_id);
-            }
-        });
-
-        // Fetch user emails for the extracted IDs
-        const { data: usersData, error: usersError } = await supabase
-            .from('auth.users') // Correctly reference auth.users table
-            .select('id, email')
-            .in('id', Array.from(userIds));
-
-        if (usersError) {
-            console.error('Error fetching users:', usersError.message);
-            displayTasks(data, {}); // Display tasks with IDs if user fetch fails
-        } else {
-            // Create a map of user ID to email
-            const userEmailMap = usersData.reduce((map, user) => {
-                map[user.id] = user.email;
-                return map;
-            }, {});
-            displayTasks(data, userEmailMap); // Display tasks with emails
-        }
-
+        displayTasks(data);
         accessDeniedMsg.classList.add('hidden'); // Hide access denied if tasks loaded
     }
 }
 
-function displayTasks(tasks, userEmailMap) {
+function displayTasks(tasks) {
     tasksList.innerHTML = ''; // Clear current list
     tasks.forEach(task => {
-        const createdByEmail = userEmailMap[task.created_by_user_id] || 'Desconocido';
-        const lastModifiedByEmail = userEmailMap[task.last_modified_by_user_id] || 'Desconocido';
-
         const taskElement = document.createElement('div');
         taskElement.classList.add('task-item', 'card', 'bg-base-100', 'shadow-xl', 'mb-4');
         taskElement.innerHTML = `
@@ -130,8 +101,8 @@ function displayTasks(tasks, userEmailMap) {
                     <button class="btn btn-sm btn-ghost text-red-500 delete-task-btn" data-id="${task.id}">Eliminar</button>
                 </div>
                 <div class="text-xs text-gray-500 mt-2">
-                    Creada por: ${createdByEmail} el ${new Date(task.created_at).toLocaleString()}
-                    ${task.updated_at !== task.created_at ? `<br>Última modificación por: ${lastModifiedByEmail} el ${new Date(task.updated_at).toLocaleString()}` : ''}
+                    Creada por: ${task.created_by_user_id ? task.created_by_user_id.email : 'Desconocido'} el ${new Date(task.created_at).toLocaleString()}
+                    ${task.updated_at !== task.created_at ? `<br>Última modificación por: ${task.last_modified_by_user_id ? task.last_modified_by_user_id.email : 'Desconocido'} el ${new Date(task.updated_at).toLocaleString()}` : ''}
                 </div>
             </div>
         `;
