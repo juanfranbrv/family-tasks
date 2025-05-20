@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Lista de Tareas Segura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold mb-4">Mi Lista de Tareas Segura</h1>
+
+        <div id="auth" class="mb-4">
+            <button id="google-signin-btn" class="btn btn-primary">Iniciar sesión con Google</button>
+        </div>
+
+        <div id="app" class="hidden">
+            <div id="access-denied" class="alert alert-error mb-4 hidden">
+                Acceso Denegado. Tu correo electrónico no está en la lista blanca.
+            </div>
+
+            <div id="task-input" class="flex gap-2 mb-4">
+                <input type="text" id="new-task-text" placeholder="Añadir nueva tarea" class="input input-bordered flex-grow">
+                <button class="btn btn-primary" id="add-task-btn">Añadir Tarea</button>
+            </div>
+
+            <div id="tasks-list" class="space-y-2">
+                <!-- Tasks will be loaded here -->
+            </div>
+
+            <div class="mt-4">
+                <button id="signout-btn" class="btn btn-secondary">Cerrar Sesión</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+    <script src="script.js" type="module"></script>
+</body>
+</html>

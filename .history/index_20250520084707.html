@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family To Do List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <style>
+        .main-content {
+            max-width: 600px; /* Adjust this value as needed */
+        }
+        #avatar-container {
+            position: absolute;
+            top: 10px;
+            right: calc((100% - 400px) / 2 + 10px); /* Align with the right edge of the main content + 10px spacing */
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: gray;
+            overflow: hidden;
+            z-index: 10; /* Ensure it's above other content */
+        }
+    </style>
+</head>
+<body>
+    <div id="avatar-container">
+        <!-- Avatar image will go here -->
+    </div>
+    <div class="main-content mx-auto p-4">
+        <h1 class="text-2xl font-bold mb-4">📋 Family To Do List</h1>
+
+        <div id="auth" class="mb-4">
+            <button id="google-signin-btn" class="btn btn-success">Iniciar sesión con Google</button>
+        </div>
+
+        <div id="app" class="hidden">
+            <div id="access-denied" class="alert alert-error mb-4 hidden">
+                Acceso Denegado. Tu correo electrónico no está en la lista blanca.
+            </div>
+
+            <div id="task-input" class="flex gap-2 mb-4">
+                <input type="text" id="new-task-text" placeholder="Añadir nueva tarea" class="input input-bordered flex-grow">
+                <button class="btn btn-success" id="add-task-btn">Añadir Tarea</button>
+            </div>
+
+            <div id="tasks-list" class="space-y-2">
+                <!-- Tasks will be loaded here -->
+            </div>
+
+            <div class="mt-4">
+                <button id="signout-btn" class="btn btn-secondary">Cerrar Sesión</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+    <script src="script.js" type="module"></script>
+</body>
+</html>

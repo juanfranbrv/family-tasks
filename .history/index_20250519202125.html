@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Lista de Tareas Segura</title>
+    <link rel="stylesheet" href="style.css?v=1">
+</head>
+<body>
+    <div class="container">
+        <h1>Mi Lista de Tareas Segura</h1>
+
+        <div id="auth">
+            <button id="google-signin-btn">Iniciar sesión con Google</button>
+        </div>
+
+        <div id="app" class="hidden">
+            <div id="access-denied" class="hidden">
+                Acceso Denegado. Tu correo electrónico no está en la lista blanca.
+            </div>
+
+            <div id="task-input">
+                <input type="text" id="new-task-text" placeholder="Añadir nueva tarea">
+                <button class=id="add-task-btn">Añadir Tarea</button>
+            </div>
+
+            <div id="tasks-list">
+                <!-- Tasks will be loaded here -->
+            </div>
+
+            <div>
+                <button id="signout-btn">Cerrar Sesión</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+    <script src="script.js" type="module"></script>
+</body>
+</html>

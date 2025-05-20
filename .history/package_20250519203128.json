@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "daisyui": "^5.0.35",
+    "tailwindcss": "^4.1.7"
+  },
+  "scripts": {
+    "build-css": "node node_modules\\tailwindcss\\lib\\cli.js -i ./src/style.css -o ./dist/style.css --watch"
+  }
+}
