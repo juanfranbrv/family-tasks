@@ -1,0 +1,44 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo -->
+  <rect width="1200" height="630" fill="#f8fafc" />
+  
+  <!-- Elementos decorativos -->
+  <rect x="0" y="0" width="1200" height="8" fill="#62b6cbff" />
+  <rect x="0" y="622" width="1200" height="8" fill="#62b6cbff" />
+  
+  <!-- Círculos decorativos -->
+  <circle cx="120" cy="110" r="80" fill="#bee9e8ff" opacity="0.4" />
+  <circle cx="1080" cy="530" r="100" fill="#cae9ffff" opacity="0.6" />
+  
+  <!-- Título -->
+  <text x="600" y="160" font-family="'Arial', sans-serif" font-size="80" font-weight="bold" fill="#1b4965ff" text-anchor="middle">Family Tasks</text>
+  
+  <!-- Descripción -->
+  <text x="600" y="230" font-family="'Arial', sans-serif" font-size="32" fill="#5fa8d3ff" text-anchor="middle">Gestiona tus tareas familiares</text>
+  
+  <!-- Ejemplo de tarjetas de tareas -->
+  <g>
+    <!-- Tarjeta 1 -->
+    <rect x="300" y="280" width="600" height="80" rx="10" fill="white" stroke="#bee9e8ff" stroke-width="4" />
+    <circle cx="330" cy="320" r="15" fill="white" stroke="#62b6cbff" stroke-width="2" />
+    <text x="380" y="325" font-family="'Arial', sans-serif" font-size="24" fill="#333333">Comprar comida para la semana</text>
+    
+    <!-- Tarjeta 2 -->
+    <rect x="300" y="370" width="600" height="80" rx="10" fill="white" stroke="#5fa8d3ff" stroke-width="4" />
+    <circle cx="330" cy="410" r="15" fill="white" stroke="#62b6cbff" stroke-width="2" />
+    <text x="380" y="415" font-family="'Arial', sans-serif" font-size="24" fill="#333333">Pagar facturas mensuales</text>
+    
+    <!-- Tarjeta 3 con marca de completado -->
+    <rect x="300" y="460" width="600" height="80" rx="10" fill="rgba(190, 233, 232, 0.2)" stroke="#bee9e8ff" stroke-width="4" />
+    <circle cx="330" cy="500" r="15" fill="#62b6cbff" stroke="#62b6cbff" stroke-width="2" />
+    <path d="M323,500 L330,507 L338,492" stroke="white" stroke-width="3" fill="none" />
+    <text x="380" y="505" font-family="'Arial', sans-serif" font-size="24" fill="#6b7280" text-decoration="line-through">Recoger la ropa de la lavandería</text>
+  </g>
+  
+  <!-- Icono -->
+  <g transform="translate(600, 585)">
+    <text font-family="'Arial', sans-serif" font-size="18" fill="#1b4965ff" text-anchor="middle">
+      Creada por Juanfranbrv con un poco de ✨ Vibe coding
+    </text>
+  </g>
+</svg>

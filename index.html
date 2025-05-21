@@ -1,61 +1,233 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Family To Do List</title>
+    <title>Family Tasks</title>
+    
+    <!-- Metadatos para compartir en redes sociales -->
+    <meta property="og:title" content="Family Tasks - Organiza tareas familiares" />
+    <meta property="og:description" content="Aplicación para coordinar y gestionar tareas familiares de forma sencilla." />
+    <meta property="og:image" content="https://awordz.com/family-tasks/preview.png" />
+    <meta property="og:url" content="https://awordz.com/family-tasks/" />
+    <meta property="og:type" content="website" />
+    
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Family Tasks - Organiza tareas familiares">
+    <meta name="twitter:description" content="Aplicación para coordinar y gestionar tareas familiares de forma sencilla.">
+    <meta name="twitter:image" content="https://awordz.com/family-tasks/preview.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="shortcut icon" href="favicon.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        .main-content {
-            max-width: 600px; /* Adjust this value as needed */
+        :root {
+            --mint-green: #bee9e8ff;
+            --moonstone: #62b6cbff;
+            --indigo-dye: #1b4965ff;
+            --columbia-blue: #cae9ffff;
+            --picton-blue: #5fa8d3ff;
         }
-        #avatar-container {
-            position: absolute;
-            top: 10px;
-            right: calc((100% - 400px) / 2 + 10px); /* Align with the right edge of the main content + 10px spacing */
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: gray;
-            overflow: hidden;
-            z-index: 10; /* Ensure it's above other content */
+        .main-content {
+            max-width: 650px;
         }
         body {
             font-family: "Pathway Extreme", sans-serif;
+            background-color: #f8fafc;
+        }
+        .task-card {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            border-left: 4px solid transparent;
+        }
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .task-card.completed {
+            border-left-color: var(--mint-green);
+            background-color: rgba(190, 233, 232, 0.2);
+        }
+        .task-card.pending {
+            border-left-color: var(--picton-blue);
+        }
+        .task-text-complete {
+            text-decoration: line-through;
+            color: #6b7280;
+        }
+        .task-actions {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .task-card:hover .task-actions {
+            opacity: 1;
+        }
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        .action-btn:hover {
+            background-color: #e5e7eb;
+        }
+        .task-meta {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        .add-task-container {
+            position: relative;
+        }
+        #new-task-text {
+            border-radius: 12px;
+            padding-right: 54px;
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+        }
+        #new-task-text:focus {
+            border-color: var(--moonstone);
+            box-shadow: 0 0 0 3px rgba(98, 182, 203, 0.2);
+        }
+        #add-task-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background-color: var(--moonstone);
+            color: white;
+            transition: all 0.2s ease;
+            line-height: 1;
+            padding-bottom: 2px; /* Pequeño ajuste para centrar visualmente el icono */
+        }
+        #add-task-btn:hover {
+            background-color: var(--indigo-dye);
+            transform: translateY(-50%) scale(1.05);
+        }
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+        .user-avatar:hover {
+            border-color: var(--moonstone);
+        }
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .loading {
+            animation: pulse 1.5s infinite;
+            color: var(--indigo-dye) !important;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
         }
     </style>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Pathway+Extreme:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pathway+Extreme:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div id="avatar-container">
-        <!-- Avatar image will go here -->
-    </div>
-    <div class="main-content mx-auto p-4">
-        <h1 class="text-4xl font-bold mb-4">📋 Family To Do List</h1>
+<body class="min-h-screen">
+    <div class="main-content mx-auto p-6">
+        
+        <div class="app-header">
+            <h1 class="text-3xl font-bold flex items-center gap-2">
+                <span style="color: var(--indigo-dye);"><i class="fas fa-clipboard-list"></i></span>
+                <span style="color: var(--indigo-dye);">Family Tasks</span>
+            </h1>
+            
+            <div class="dropdown dropdown-end">
+                <div id="avatar-container" class="hidden" tabindex="0" role="button">
+                    <!-- Avatar will be inserted here by JavaScript -->
+                </div>
+                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-64">
+                    <li class="user-info px-4 py-3 text-sm border-b border-gray-200">
+                        <!-- User info will be inserted here by JavaScript -->
+                    </li>
+                    <li><a id="signout-btn" class="py-3"><i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión</a></li>
+                </ul>
+            </div>
+        </div>
 
-        <div id="auth" class="mb-4">
-            <button id="google-signin-btn" class="btn btn-success">Iniciar sesión con Google</button>
+        <div id="auth" class="flex flex-col items-center justify-center py-10">
+            <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-md text-center">
+                <div class="text-5xl text-center mb-4" style="color: var(--moonstone);"><i class="fas fa-users"></i></div>
+                <h2 class="text-2xl font-bold mb-6" style="color: var(--indigo-dye);">Bienvenido a Family Tasks</h2>
+                <p class="text-gray-600 mb-6">La aplicación que te ayuda a gestionar tus tareas familiares de forma fácil y eficiente.</p>
+                <button id="google-signin-btn" class="btn gap-2" style="background-color: var(--moonstone); color: white; border: none;">
+                    <i class="fab fa-google"></i>
+                    Iniciar sesión con Google
+                </button>
+            </div>
         </div>
 
         <div id="app" class="hidden">
             <div id="access-denied" class="alert alert-error mb-4 hidden">
+                <i class="fas fa-exclamation-circle mr-2"></i>
                 Acceso Denegado. Tu correo electrónico no está en la lista blanca.
             </div>
 
-            <div id="task-input" class="flex gap-2 mb-4">
-                <input type="text" id="new-task-text" placeholder="Añadir nueva tarea" class="input input-bordered flex-grow">
-                <button class="btn btn-success" id="add-task-btn">Añadir Tarea</button>
+            <div class="add-task-container mb-6">
+                <input type="text" id="new-task-text" placeholder="¿Qué hay que hacer?" class="input w-full py-4">
+                <button id="add-task-btn" aria-label="Añadir tarea">
+                    <i class="fas fa-plus"></i>
+                </button>
             </div>
 
-            <div id="tasks-list" class="space-y-2">
-                <!-- Tasks will be loaded here -->
+            <div class="relative">
+                <div id="loading-indicator" class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-70 hidden">
+                    <div class="loading text-2xl">
+                        <i class="fas fa-circle-notch fa-spin"></i>
+                    </div>
+                </div>
+                
+                <div id="tasks-list" class="space-y-3">
+                    <!-- Tasks will be loaded here -->
+                </div>
+                
+                <div id="empty-state" class="hidden text-center py-10">
+                    <div class="text-5xl text-gray-300 mb-4" style="color: var(--mint-green);"><i class="fas fa-clipboard-check"></i></div>
+                    <h3 class="text-xl font-medium" style="color: var(--indigo-dye);">No hay tareas pendientes</h3>
+                    <p class="text-gray-400 mt-2">Añade una nueva tarea para empezar</p>
+                </div>
             </div>
+        </div>
+    </div>
 
-            <div class="mt-4">
-                <button id="signout-btn" class="btn btn-secondary">Cerrar Sesión</button>
+    <footer class="text-center py-4 mt-8" style="color: var(--indigo-dye); font-size: 0.85rem;">
+        Creada por Juanfranbrv con un poco de ✨ Vibe coding
+    </footer>
+
+    <div id="edit-modal" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg mb-4" style="color: var(--indigo-dye);">Editar tarea</h3>
+            <input type="text" id="edit-task-input" class="input input-bordered w-full" placeholder="Texto de la tarea">
+            <input type="hidden" id="edit-task-id">
+            <div class="modal-action">
+                <button id="cancel-edit-btn" class="btn">Cancelar</button>
+                <button id="save-edit-btn" class="btn" style="background-color: var(--moonstone); color: white; border: none;">Guardar</button>
             </div>
         </div>
     </div>

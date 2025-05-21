@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family To Do List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <style>
+        .main-content {
+            max-width: 600px; /* Adjust this value as needed */
+        }
+        body {
+            font-family: "Pathway Extreme", sans-serif;
+        }
+    </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pathway+Extreme:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></link>
+</head>
+<body>
+    <div class="main-content mx-auto p-4">
+        <!-- Header con título, botón y avatar alineados -->
+        <div class="flex items-center justify-between mb-4 gap-2">
+            <h1 class="text-4xl font-bold">📋 Family To Do List</h1>
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar" id="avatar-dropdown-btn">
+<div class="w-12 rounded-full">
+                        <!-- Avatar image will go here -->
+                    </div>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                    <li><a id="signout-btn-menu">Cerrar Sesión</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="auth" class="mb-4">
+            <button id="google-signin-btn" class="btn btn-primary">Iniciar sesión con Google</button>
+        </div>
+
+        <div id="app" class="">
+            <div id="access-denied" class="alert alert-error mb-4 hidden">
+                Acceso Denegado. Tu correo electrónico no está en la lista blanca.
+            </div>
+
+            <div id="task-input" class="flex gap-2 mb-4">
+                <input type="text" id="new-task-text" placeholder="Añadir nueva tarea" class="input input-bordered flex-grow">
+                <button class="btn btn-primary" id="add-task-btn"><i class="fas fa-plus mr-2"></i>Añadir Tarea</button>
+            </div>
+
+            <div id="tasks-list" class="space-y-2">
+                <!-- Tasks will be loaded here -->
+            </div>
+
+            <!-- El avatar y el botón ya están en el header -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+    <script src="script.js" type="module"></script>
+
+    <!-- Modal para editar tarea -->
+    <dialog id="edit_task_modal" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">Editar Tarea</h3>
+        <input type="text" id="edit-task-text" placeholder="Editar tarea" class="input input-bordered w-full mt-4">
+        <div class="modal-action">
+          <button id="save-task-btn" class="btn btn-primary">Guardar Cambios</button>
+          <form method="dialog">
+            <button class="btn">Cancelar</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Firma -->
+    <div class="text-center text-xs text-gray-400 mt-8 mb-4">
+        Creada por juanfranbrv con poco de <i class="fa-solid fa-sparkle"></i> Vibe Coding
+    </div>
+</body>
+</html>
