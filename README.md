@@ -51,6 +51,14 @@ Aplicación web sencilla para coordinar y gestionar tareas familiares. Permite a
 5.  **Abrir la aplicación:**
     Abre tu navegador en la dirección proporcionada por Browser-Sync (normalmente `http://localhost:3000/`).
 
+## Próximas Mejoras
+
+Aquí hay algunas ideas para futuras iteraciones de la aplicación:
+
+-   **Generalizar la aplicación:** Permitir que cualquier usuario se registre y cree su propia lista de tareas privada.
+-   **Colaboración en listas:** Implementar la funcionalidad para que el creador de una lista pueda invitar a otros usuarios a ver y editar su lista.
+-   **Control de acceso:** Asegurar que el creador de la lista mantenga la propiedad y el control total sobre quién tiene acceso a su lista, con la capacidad de revocar el acceso.
+
 ## Contribuciones
 
 Las contribuciones son bienvenidas. Por favor, abre un "issue" o envía un "pull request".

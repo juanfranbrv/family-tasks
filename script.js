@@ -80,11 +80,27 @@ supabase.auth.onAuthStateChange((event, session) => {
 });
 
 async function handleSignedInUser(user) {
-    // Check if user email is in whitelist (RLS will handle actual data access)
     console.log('User signed in:', user);
+
+    // Define the whitelist based on the userDisplayNameMap keys
+    const whitelistEmails = Object.keys(userDisplayNameMap);
+
+    // Check if user email is in whitelist
+    if (!whitelistEmails.includes(user.email)) {
+        console.warn('Access denied for user:', user.email);
+        authDiv.classList.remove('hidden');
+        appDiv.classList.add('hidden');
+        accessDeniedMsg.classList.remove('hidden'); // Show access denied
+        avatarContainer.classList.add('hidden'); // Hide avatar
+        avatarContainer.innerHTML = ''; // Clear avatar content
+        // signOut(); // Removed immediate sign out
+        return; // Stop further processing for unauthorized users
+    }
+
+    // If user is in whitelist, proceed with displaying the app
     authDiv.classList.add('hidden');
     appDiv.classList.remove('hidden');
-    accessDeniedMsg.classList.add('hidden'); // Hide access denied initially
+    accessDeniedMsg.classList.add('hidden'); // Hide access denied
 
     // Display avatar
     avatarContainer.classList.remove('hidden');
