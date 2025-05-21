@@ -1,9 +1,0 @@
-{
-  "devDependencies": {
-    "daisyui": "^5.0.35",
-    "tailwindcss": "^4.1.7"
-  },
-  "scripts": {
-    "build-css": "tailwindcss -i ./src/style.css -o ./dist/style.css --watch"
-  }
-}
